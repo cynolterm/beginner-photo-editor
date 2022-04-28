@@ -3,66 +3,125 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 
 #implementing methods for functionality
+class Functionality:
+    def __init__(self):
+        pass
 
-def browse_file():
-    f_types = [('Jpg Files', '*.jpg'),('PNG Files','*.png')]  
-    root.update()
-    file_name = filedialog.askopenfilename(initialdir = "/home/ad.adasworks.com/reka.szabo/", title = "Select a File", filetypes = f_types, multiple=False)
-    print(file_name)
+    def flip_hor():
+        # TODO: functionality for flip horizontally
+        pass
 
-def calc_img_size(img):
-    #return height and with
-    pass
+    def flip_ver():
+        # TODO: functionality for flip vertically
+        pass
 
-def show_image(image_path):
-    Label(root, text="Original image",font=("Arial", 12)).grid(row=1, column=2)    
-    canv = Canvas(root, width=400, height=300, bg='white')
-    canv.grid(row=2, column=2)
+    def rotate():
+        # TODO: functionality for rotate
+        pass
 
-    img = Image.open('/home/ad.adasworks.com/reka.szabo/Downloads/Adding-seasoning-mixing-and-served-guacamole-with-chips.jpg')
-    #arányosan méretezzen --> számoljuk ki a két értéket --> calc_img_size
-    resized_img = img.resize((300,400), Image.ANTIALIAS)
-    new_img = ImageTk.PhotoImage(resized_img)
-    canv.create_image(0,0, anchor=NW, image=new_img)     
+    def resize():
+        # TODO: functionality for resize
+        pass
 
-    Label(root, text="Modified image",font=("Arial", 12)).grid(row=3, column=2)    
-    canv = Canvas(root, width=400, height=300, bg='white')
-    canv.grid(row=4, column=2)
-
-    img = Image.open('/home/ad.adasworks.com/reka.szabo/Downloads/Adding-seasoning-mixing-and-served-guacamole-with-chips.jpg')
-    #arányosan méretezzen --> számoljuk ki a két értéket --> calc_img_size
-    resized_img = img.resize((300,400), Image.ANTIALIAS)
-    new_img = ImageTk.PhotoImage(resized_img)
-    canv.create_image(0,0, anchor=NW, image=new_img)     
-
-    root.mainloop()
+    def grayscale(self):
+         # TODO: functionality for grayscaling
+        pass
 
 
-#main 
+class Editor:
+    def __init__(self):
+        self.screen_w = root.winfo_screenwidth()
+        self.screen_h = root.winfo_screenheight()
+        self.imgs = []
+        self.fun = Functionality()
+        self.btns = []
 
-def open_editor():
-    btn_open.pack_forget()
-    #img_path = browse_file()
-    show_image('cica')
+    def browse_file(self):
+        f_types = [('Jpg Files', '*.jpg'),('PNG Files','*.png')]  
+        root.update()
+        file_name = filedialog.askopenfilename(initialdir = "/home/ad.adasworks.com/reka.szabo/", title = "Select a File", filetypes = f_types, multiple=False)
+        return file_name
 
-    menu = Menu(root)
-    root.config(menu=menu)
-    filemenu = Menu(menu)
-    menu.add_cascade(label='File', menu=filemenu)
-    filemenu.add_command(label='New')
-    filemenu.add_command(label='Open...')
-    filemenu.add_separator()
-    filemenu.add_command(label='Exit', command=root.quit)
-    helpmenu = Menu(menu)
-    menu.add_cascade(label='Help', menu=helpmenu)
-    helpmenu.add_command(label='About')
+    def calc_img_size(self, img):
+        new_w = round(self.screen_w*0.2)
+        new_h = round(self.screen_h*0.25)
+        w, h = img.size
+        if h > new_h or w > new_w:
+            if round((new_w/w)*h) > new_h: 
+                return new_h, round((new_h/h)*w)
+            else: 
+                return round((new_w/w)*h), new_w
+        else:
+            return h, w
+        
+
+    def show_image_with_label(self, img_path, txt, px, py):
+        print(px, py)
+        Label(root, text=txt,font=("Arial", 12)).grid(row=px, column=py)    
+        print(Label)
+        cw = self.screen_w*0.3
+        ch = self.screen_h*0.3
+        canv = Canvas(root, width=cw, height=ch)
+        canv.grid(row=px+1, column=py)
+
+        img = Image.open(img_path)
+        img_h, img_w = self.calc_img_size(img)
+        resized_img = img.resize((img_w, img_h))
+        new_img = ImageTk.PhotoImage(resized_img)
+        canv.create_image(10,10, anchor=NW, image=new_img)
+        self.imgs.append(new_img)
+
+        root.update()
+
+    def add_button(self, name, px, py, cmd):
+        btn = Button(root, text=name, width=25, command=cmd)
+        btn.grid(row=px, column=py)
+        self.btns.append(btn)
+
+    def watermark(self):
+         # TODO: color picker, fontsize, textbox for the text and slider for opacity
+        pass
+
+    def treshold(self):
+         # TODO: slider (0-255) for tresholding level
+        pass
+
+    def rgb(self):
+        # TODO: three sliders for Red, Green and Blue
+        pass
+
+    def open_editor(self):
+        btn_open.place_forget()
+        menu = Menu(root)
+        root.config(menu=menu)
+        filemenu = Menu(menu)
+        menu.add_cascade(label='File', menu=filemenu)
+        filemenu.add_command(label='Open...')
+        filemenu.add_separator()
+        filemenu.add_command(label='Exit', command=root.quit)
+        transfmenu = Menu(menu)
+        menu.add_cascade(label='Transform', menu=transfmenu)
+        transfmenu.add_command(label='Flip horizontally', command=self.fun.flip_hor)
+        transfmenu.add_command(label='Flip vertically', command=self.fun.flip_ver)
+        transfmenu.add_command(label='Rotate', command=self.fun.rotate)
+        transfmenu.add_command(label='Resize', command=self.fun.resize)
+
+        img_path = self.browse_file()
+        self.show_image_with_label(img_path, 'Original image', 1, 2)
+        self.show_image_with_label(img_path, 'Modified image', 3, 2)
+
+        self.add_button('Watermark', 1, 1, self.watermark)
+        self.add_button('Treshold', 2, 1, self.treshold)
+        self.add_button('Grayscale', 3, 1, self.fun.grayscale)
+        self.add_button('RGB transformations', 4, 1, self.rgb)
+
+        root.mainloop()
+
+if __name__ == '__main__':
+    root = Tk()
+    root.geometry("%dx%d" % (root.winfo_screenwidth(), root.winfo_screenheight())) #fullscreen mode
+    root.title('Photo editor for beginners')
+    editor = Editor()
+    btn_open = Button(root, text='Open', width=25, command=editor.open_editor)
+    btn_open.place(relx=0.5, rely=0.5, anchor=CENTER)
     mainloop()
-
-
-
-root = Tk()
-root.geometry('800x600')
-root.title('Photo editor for beginners')
-btn_open = Button(root, text='Open', width=25, command=open_editor)
-btn_open.pack()
-mainloop()
