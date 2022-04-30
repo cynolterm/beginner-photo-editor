@@ -15,6 +15,7 @@ class Functionality:
         newPath = newPath + "_flip_hor.jpg"
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
+        self.imgP = newPath
         # TODO: functionality for flip horizontally
         pass
 
@@ -26,6 +27,7 @@ class Functionality:
         newPath = newPath + "_flip_ver.jpg"
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
+        self.imgP = newPath
         # TODO: functionality for flip vertically
         pass
 
@@ -39,6 +41,7 @@ class Functionality:
         newPath = newPath + "_rotated.jpg"
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
+        self.imgP = newPath
         # TODO: functionality for rotate
         pass
 
@@ -54,6 +57,7 @@ class Functionality:
         newPath = newPath + "_grayscale.jpg"
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
+        self.imgP = newPath
          # TODO: functionality for grayscaling
         pass
     def setImg(self, path):
