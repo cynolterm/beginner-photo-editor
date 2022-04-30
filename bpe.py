@@ -1,21 +1,44 @@
 from tkinter import *
 from tkinter import filedialog
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageOps
 
 #implementing methods for functionality
 class Functionality:
     def __init__(self):
         pass
 
-    def flip_hor():
+    def flip_hor(self):
+        img = Image.open(self.imgP)
+        newImg = ImageOps.mirror(img)
+        newPath = self.imgP
+        newPath = newPath[:-4]
+        newPath = newPath + "_flip_hor.jpg"
+        newImg.save(newPath)
+        self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
         # TODO: functionality for flip horizontally
         pass
 
-    def flip_ver():
+    def flip_ver(self):
+        img = Image.open(self.imgP)
+        newImg = ImageOps.flip(img)
+        newPath = self.imgP
+        newPath = newPath[:-4]
+        newPath = newPath + "_flip_ver.jpg"
+        newImg.save(newPath)
+        self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
         # TODO: functionality for flip vertically
         pass
 
-    def rotate():
+    def rotate(self):
+        # if not amount:
+        amount = 45
+        img = Image.open(self.imgP)
+        newImg = img.rotate(amount)
+        newPath = self.imgP
+        newPath = newPath[:-4]
+        newPath = newPath + "_rotated.jpg"
+        newImg.save(newPath)
+        self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
         # TODO: functionality for rotate
         pass
 
@@ -24,8 +47,24 @@ class Functionality:
         pass
 
     def grayscale(self):
+        img = Image.open(self.imgP)
+        newImg = ImageOps.grayscale(img)
+        newPath = self.imgP
+        newPath = newPath[:-4]
+        newPath = newPath + "_grayscale.jpg"
+        newImg.save(newPath)
+        self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
          # TODO: functionality for grayscaling
         pass
+    def setImg(self, path):
+        self.imgP = path
+        pass
+
+    def setEditor(self, e):
+        self.editor = e
+
+    imgP = ""
+    editor = ""
 
 
 class Editor:
@@ -34,12 +73,14 @@ class Editor:
         self.screen_h = root.winfo_screenheight()
         self.imgs = []
         self.fun = Functionality()
+        self.fun.setEditor(self)
         self.btns = []
 
     def browse_file(self):
         f_types = [('Jpg Files', '*.jpg'),('PNG Files','*.png')]  
         root.update()
         file_name = filedialog.askopenfilename(initialdir = "/home/ad.adasworks.com/reka.szabo/", title = "Select a File", filetypes = f_types, multiple=False)
+        self.fun.setImg(file_name)
         return file_name
 
     def calc_img_size(self, img):
@@ -82,13 +123,18 @@ class Editor:
          # TODO: color picker, fontsize, textbox for the text and slider for opacity
         pass
 
-    def treshold(self):
-         # TODO: slider (0-255) for tresholding level
+    def threshold(self):
+         # TODO: slider (0-255) for thresholding level
         pass
 
     def rgb(self):
         # TODO: three sliders for Red, Green and Blue
         pass
+
+    def open_new_file(self):
+        img_path = self.browse_file()
+        self.show_image_with_label(img_path, 'Original image', 1, 2)
+        self.show_image_with_label(img_path, 'Modified image', 3, 2)
 
     def open_editor(self):
         btn_open.place_forget()
@@ -96,7 +142,7 @@ class Editor:
         root.config(menu=menu)
         filemenu = Menu(menu)
         menu.add_cascade(label='File', menu=filemenu)
-        filemenu.add_command(label='Open...')
+        filemenu.add_command(label='Open...', command=self.open_new_file)
         filemenu.add_separator()
         filemenu.add_command(label='Exit', command=root.quit)
         transfmenu = Menu(menu)
@@ -111,7 +157,7 @@ class Editor:
         self.show_image_with_label(img_path, 'Modified image', 3, 2)
 
         self.add_button('Watermark', 1, 1, self.watermark)
-        self.add_button('Treshold', 2, 1, self.treshold)
+        self.add_button('threshold', 2, 1, self.threshold)
         self.add_button('Grayscale', 3, 1, self.fun.grayscale)
         self.add_button('RGB transformations', 4, 1, self.rgb)
 
