@@ -15,7 +15,7 @@ class Functionality:
         newPath = newPath[:-4]
         newPath = newPath + "_flip_hor.jpg"
         newImg.save(newPath)
-        self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
+        self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
         # TODO: functionality for flip horizontally
         pass
@@ -27,7 +27,7 @@ class Functionality:
         newPath = newPath[:-4]
         newPath = newPath + "_flip_ver.jpg"
         newImg.save(newPath)
-        self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
+        self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
         # TODO: functionality for flip vertically
         pass
@@ -41,7 +41,7 @@ class Functionality:
         newPath = newPath[:-4]
         newPath = newPath + "_rotated.jpg"
         newImg.save(newPath)
-        self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
+        self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
         # TODO: functionality for rotate
         pass
@@ -166,7 +166,7 @@ class Editor:
     def open_new_file(self):
         img_path = self.browse_file()
         self.show_image_with_label(img_path, 'Original image', 1, 2)
-        self.show_image_with_label(img_path, 'Modified image', 3, 2)
+        self.show_image_with_label(img_path, 'Modified image', 6, 2)
 
     def open_editor(self):
         btn_open.place_forget()
