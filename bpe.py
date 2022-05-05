@@ -222,18 +222,13 @@ class Editor:
         Label(self.frame, text='Width' ,font=("Arial", 10), justify=CENTER).grid(row=7, column=1) 
         width_var = StringVar(root)
         width_var.set(str(self.img_width))
-        width_editor = Spinbox(self.frame, from_= 0, to=3000, textvariable=width_var,  command= lambda: self.fun.resize(int(width_editor.get())))
+        width_editor = Spinbox(self.frame, from_= 0, to=3000, textvariable=width_var,  command= lambda: self.fun.resize(int(width_editor.get()), int(height_editor.get())))
         width_editor.grid(row=8, column=1)
-
-        chain_img = PhotoImage(file='./chain.png')
-        print(chain_img)
-        chain_btn = Button(self.frame, image=chain_img, width=20, height=50, command=self.choose_color)
-        chain_btn.grid(row=9, column=1)
 
         Label(self.frame, text='Height' ,font=("Arial", 10), justify=CENTER).grid(row=10, column=1) 
         height_var = StringVar(root)
-        height_var.set(str(self.img_width))
-        height_editor = Spinbox(self.frame, from_= 0, to=3000, textvariable= height_var,  command= lambda: self.fun.resize(int(width_editor.get())))
+        height_var.set(str(self.img_height))
+        height_editor = Spinbox(self.frame, from_= 0, to=3000, textvariable= height_var,  command= lambda: self.fun.resize(int(width_editor.get()), int(height_editor.get())))
         height_editor.grid(row=11, column=1)
 
     def open_new_file(self):
