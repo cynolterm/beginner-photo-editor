@@ -4,7 +4,7 @@ from tkinter import *
 from tkinter import filedialog
 import tkinter
 from turtle import back
-from PIL import Image, ImageTk, ImageOps
+from PIL import Image, ImageTk, ImageOps, ImageDraw, ImageColor, ImageFont
 from tkinter import colorchooser
 
 #implementing methods for functionality
@@ -16,69 +16,119 @@ class Functionality:
         img = Image.open(self.imgP)
         newImg = ImageOps.mirror(img)
         newPath = self.imgP
+        ext = newPath[-4:]
         newPath = newPath[:-4]
-        newPath = newPath + "_flip_hor.jpg"
+        newPath = newPath + "_flip_hor" + ext
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-        # TODO: functionality for flip horizontally
         pass
 
     def flip_ver(self):
         img = Image.open(self.imgP)
         newImg = ImageOps.flip(img)
         newPath = self.imgP
+        ext = newPath[-4:]
         newPath = newPath[:-4]
-        newPath = newPath + "_flip_ver.jpg"
+        newPath = newPath + "_flip_ver" + ext
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-        # TODO: functionality for flip vertically
         pass
 
     def rotate(self, angle): ##angle value added to arguments list --> on every change of the scaler, rotate the image with angle
-        # if not amount:
-        amount = 45
         img = Image.open(self.imgP)
-        newImg = img.rotate(amount)
+        rot = angle.get() - self.prevAngle
+        newImg = img.rotate(rot, expand=True)
         newPath = self.imgP
+        ext = newPath[-4:]
         newPath = newPath[:-4]
-        newPath = newPath + "_rotated.jpg"
+        newPath = newPath + "_rotated" + ext
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-        # TODO: functionality for rotate
+        self.prevAngle = angle.get()
         pass
 
-    def resize(self, width):
-        print(width)
-        # TODO: functionality for resize
+    def resize(self, width, height):
+        img = Image.open(self.imgP)
+        newImg = img.resize((width, height))
+        newPath = self.imgP
+        ext = newPath[-4:]
+        newPath = newPath[:-4]
+        newPath = newPath + "_resized" + ext
+        newImg.save(newPath)
+        self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
+        self.imgP = newPath
         pass
 
     def grayscale(self):
         img = Image.open(self.imgP)
         newImg = ImageOps.grayscale(img)
         newPath = self.imgP
+        ext = newPath[-4:]
         newPath = newPath[:-4]
-        newPath = newPath + "_grayscale.jpg"
+        newPath = newPath + "_grayscale" + ext
         newImg.save(newPath)
-        self.editor.show_image_with_label(newPath, "Modified Image", 3, 2)
+        self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-         # TODO: functionality for grayscaling
         pass
 
     def watermark(self, color, text, opacity):
         print(color, text, opacity, 'cica')
-        # TODO: functionality for watermark
+        opacity = int(opacity/100 * 255)
+        RGB = ImageColor.getcolor(color, "RGB")
+        RGBA = (RGB[0], RGB[1], RGB[2], opacity)
+        print(RGBA)
+        font = ImageFont.truetype("arial", 100)
+        img = Image.open(self.imgP)
+        img_edit = ImageDraw.Draw(img)
+        img_edit.text((16,16), text, RGBA, font)
+        newPath = self.imgP
+        newPath = newPath[:-4]
+        newPath = newPath + "_watermark.png"
+        img.save(newPath)
+        self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
+        self.imgP = newPath
         pass
 
     def threshold(self, level):
         print(level)
-        #TODO: functionality for thresholding
+        img = Image.open(self.imgP)
+        red, green, blue = img.split()
+        img_t = blue.point(lambda x: 255 if x > level else 0)
+        newImg = img_t.convert("1")
+        newPath = self.imgP
+        ext = newPath[-4:]
+        newPath = newPath[:-4]
+        newPath = newPath + "_threshold" + ext
+        newImg.save(newPath)
+        self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
+        self.imgP = newPath
 
     def rgb_transformation(self, r, g, b):
-        print(r.get(), g.get(), b.get())
-        #TODO: functioanlity for rgb
+        r = int(r.get())
+        g = int(g.get())
+        b = int(b.get())
+        img = Image.open(self.imgP)
+        red, green, blue = img.split()
+        if r != 0 and r != self.prevRed:
+            red = red.point(lambda p: r)
+            self.prevRed = r
+        if g != 0 and g != self.prevGreen:
+            green = green.point(lambda p: g)
+            self.prevGreen = g
+        if b != 0 and b != self.prevBlue:    
+            blue = blue.point(lambda p: b)
+            self.prevBlue = b
+        newImg = Image.merge("RGB",(red,green,blue))
+        newPath = self.imgP
+        ext = newPath[-4:]
+        newPath = newPath[:-4]
+        newPath = newPath + "_rgb" + ext
+        newImg.save(newPath)
+        self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
+        self.imgP = newPath
 
     def setImg(self, path):
         self.imgP = path
@@ -89,6 +139,10 @@ class Functionality:
 
     imgP = ""
     editor = ""
+    prevAngle = 0
+    prevRed = 0
+    prevGreen = 0
+    prevBlue = 0
 
 
 class Editor:
@@ -193,19 +247,19 @@ class Editor:
         #self.red = self.create_scaler(0, 255, 255, VERTICAL, 8, 1, self.show_cicaolor)
         red_value = DoubleVar()
         red = Scale(self.frame, variable = red_value, from_ = 0, to = 255, orient = VERTICAL, command= lambda x: self.fun.rgb_transformation(red_value, green_value, blue_value))
-        red.set(127)
+        red.set(0)
         red.grid(row=8, column=1)
         Label(self.frame, text='Green' ,font=("Arial", 10), justify=CENTER).grid(row=7, column=2) 
         #self.green = self.create_scaler(0, 255, 255, VERTICAL, 8, 2)
         green_value = DoubleVar()
         green = Scale(self.frame, variable = green_value, from_ = 0, to = 255, orient = VERTICAL, command= lambda x: self.fun.rgb_transformation(red_value, green_value, blue_value))
-        green.set(127)
+        green.set(0)
         green.grid(row=8, column=2)
         Label(self.frame, text='Blue' ,font=("Arial", 10), justify=CENTER).grid(row=7, column=3) 
         #self.blue = self.create_scaler(0, 255, 255, VERTICAL, 8, 3)
         blue_value = DoubleVar()
         blue = Scale(self.frame, variable = blue_value, from_ = 0, to = 255, orient = VERTICAL, command= lambda x: self.fun.rgb_transformation(red_value, green_value, blue_value))
-        blue.set(127)
+        blue.set(0)
         blue.grid(row=8, column=3)
 
     def rotate(self):
