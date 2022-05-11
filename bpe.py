@@ -75,7 +75,7 @@ class Functionality:
         RGB = ImageColor.getcolor(color, "RGB")
         RGBA = (RGB[0], RGB[1], RGB[2], opacity)
         print(RGBA)
-        font = ImageFont.truetype("arial", 100)
+        font = ImageFont.truetype("./arial.ttf", 100)
         img = Image.open(self.imgP)
         img_edit = ImageDraw.Draw(img)
         img_edit.text((16,16), text, RGBA, font)
