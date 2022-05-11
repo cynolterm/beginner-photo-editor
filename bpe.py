@@ -70,11 +70,9 @@ class Functionality:
         self.imgP = newPath
 
     def watermark(self, color, text, opacity):
-        print(color, text, opacity, 'cica')
         opacity = int(opacity/100 * 255)
         RGB = ImageColor.getcolor(color, "RGB")
         RGBA = (RGB[0], RGB[1], RGB[2], opacity)
-        print(RGBA)
         font = ImageFont.truetype("./arial.ttf", 100)
         img = Image.open(self.imgP)
         img_edit = ImageDraw.Draw(img)
@@ -87,7 +85,6 @@ class Functionality:
         self.imgP = newPath
 
     def threshold(self, level):
-        print(level)
         img = Image.open(self.imgP)
         red, green, blue = img.split()
         img_t = blue.point(lambda x: 255 if x > level else 0)
