@@ -215,7 +215,7 @@ class Editor:
     def watermark(self):
         self.clear_frame()   
 
-        self.watermark_color = 'black'
+        self.watermark_color = (0, '#000000')
         btn_color = Button(self.frame, text='Choose color', width=25, command=self.choose_color)
         btn_color.grid(row = 7, column = 1)
         text_editor = Text(self.frame, width=40, height=1)
