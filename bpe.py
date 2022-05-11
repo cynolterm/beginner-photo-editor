@@ -22,7 +22,6 @@ class Functionality:
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-        pass
 
     def flip_ver(self):
         img = Image.open(self.imgP)
@@ -34,7 +33,6 @@ class Functionality:
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-        pass
 
     def rotate(self, angle): ##angle value added to arguments list --> on every change of the scaler, rotate the image with angle
         img = Image.open(self.imgP)
@@ -48,7 +46,6 @@ class Functionality:
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
         self.prevAngle = angle.get()
-        pass
 
     def resize(self, width, height):
         img = Image.open(self.imgP)
@@ -60,7 +57,6 @@ class Functionality:
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-        pass
 
     def grayscale(self):
         img = Image.open(self.imgP)
@@ -72,7 +68,6 @@ class Functionality:
         newImg.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-        pass
 
     def watermark(self, color, text, opacity):
         print(color, text, opacity, 'cica')
@@ -90,7 +85,6 @@ class Functionality:
         img.save(newPath)
         self.editor.show_image_with_label(newPath, "Modified Image", 6, 2)
         self.imgP = newPath
-        pass
 
     def threshold(self, level):
         print(level)
@@ -132,7 +126,6 @@ class Functionality:
 
     def setImg(self, path):
         self.imgP = path
-        pass
 
     def setEditor(self, e):
         self.editor = e
